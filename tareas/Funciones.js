@@ -104,10 +104,12 @@ export default class Funciones {
         row.cells[0].appendChild(iNombre);
         let iInicio = document.createElement("input");
         iInicio.type = "date";
+        iInicio.value = Tarea._OpDato();
         row.cells[1].innerHTML = "";
         row.cells[1].appendChild(iInicio);
         let iFin = document.createElement("input");
         iFin.type = "date";
+        iFin.value = Tarea._OpDato2()
         row.cells[2].innerHTML = "";
         row.cells[2].appendChild(iFin);
         let btnGuardado = document.createElement("input");
@@ -116,14 +118,15 @@ export default class Funciones {
         btnGuardado.className = "btn btn-success";
         row.cells[3].innerHTML = "";
         row.cells[3].appendChild(btnGuardado);
-        this._Inicio2 = (Tarea.Inicio.getDate()) + "/" + this._Meses[Tarea.Inicio.getMonth()] + "/" + Tarea.Inicio.getFullYear();
-        this._Dias = Math.trunc((new Date(iFin.value) - new Date())/(24 * 60 * 60 * 1000));
+        console.log(Tarea._OpCadena2())
+        this._Dias = Tarea._OpDias();
+        this._diaInicial = Tarea._OpCadena();
         btnGuardado.addEventListener("click", () => {   
         let nuevoTarea = 
         {
             Nombre: iNombre.value,
-            Inicio: new Date(iInicio.value),
-            Fin: new Date(iFin.value),
+            Inicio: iInicio.value,
+            Fin: iFin.value,
             Dias: this._Dias
         };
         console.log(nuevoTarea)
@@ -145,7 +148,8 @@ export default class Funciones {
         let nuevo = this._RTarea(Guardar, Tarea.Nombre);
         Guardar[nuevo] = nuevoTarea;
         console.log(Guardar)
-        this._cancelarEdicion(row, new Funciones(nuevoTarea));
+        localStorage.setItem("Almacen", JSON.stringify(Guardar));
+        this._cancelarEdicion(row, new Funciones(Guardar));
         return Guardar;
     }
     _cancelarEdicion(row, Tarea)
@@ -153,7 +157,7 @@ export default class Funciones {
         row.cells[0].innerHTML = "";
         row.cells[0].innerHTML = Tarea.Nombre;
         row.cells[1].innerHTML = "";
-        row.cells[1].innerHTML = this._Inicio2;
+        row.cells[1].innerHTML = this._diaInicial;
         row.cells[2].innerHTML = "";
         row.cells[2].innerHTML = this._Dias;
         this._Boton(row, Tarea);
