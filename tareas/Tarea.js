@@ -35,20 +35,8 @@ export default class Tareas {
     CFin.innerHTML = Tarea._OpDias();
     this._CTareas++;
     this._NTareas.rows[0].cells[1].innerHTML = this._CTareas;
-    let valor = Tarea._Boton(row, Tarea); 
-    this._Comprobador(valor);
+    Tarea._Boton(row, Tarea); 
     this._Guardado(Tarea);
-    }
-    _Comprobador(valor)
-    {
-        if(valor === undefined )
-        {
-            return;
-        }
-        else
-        {
-            localStorage.setItem("Almacen", JSON.stringify(valor));
-        }
     }
     _Guardado(Tarea)
     {
@@ -60,6 +48,7 @@ export default class Tareas {
             Dias: Dias
                             };
         this._Tareas.push(objTareas);
+        
     }
     //agregar contacto
     _ATarea(Tarea) 
@@ -74,8 +63,8 @@ export default class Tareas {
         })
         return;
     }
-
     this._ATabla(Tarea);
+    localStorage.setItem("Almacen", JSON.stringify(this._Tareas));
     }
     _Ordenar(Tipo)
         {

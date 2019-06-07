@@ -4,8 +4,6 @@ export default class Funciones {
         this._inicio = new Date(tarea.Inicio);
         this._fin = new Date(tarea.Fin);
         this._Tareas = [];
-        this._Inicio2 = 0;
-        this._Dias = 0;
         this._Meses = [
         "Enero",
         "Febrero",
@@ -29,7 +27,7 @@ export default class Funciones {
         return numero;
     }
     _OpDato(){ 
-        let Fecha = this._inicio.getFullYear() + "-" + this._Op2Digitos(this._inicio.getMonth()+1) + "-" + this._Op2Digitos(this._inicio.getDate()+1);
+        let Fecha = this._inicio.getFullYear() + "-" + this._Op2Digitos(this._inicio.getMonth()+1) + "-" + this._Op2Digitos(this._inicio.getDate());
         return Fecha;
     }
     _OpCadena() {
@@ -37,12 +35,8 @@ export default class Funciones {
         return FechaCadena;
     }
     _OpDato2(){ 
-    let Fecha2 = this._fin.getFullYear() + "-" + this._Op2Digitos(this._fin.getMonth()+1) + "-" + this._Op2Digitos(this._fin.getDate()+1);
+    let Fecha2 = this._fin.getFullYear() + "-" + this._Op2Digitos(this._fin.getMonth()+1) + "-" + this._Op2Digitos(this._fin.getDate());
     return Fecha2;
-    }
-    _OpCadena2() {
-    let FechaCadena2 = (this._fin.getDate()) + "/" + this._Meses[this._fin.getMonth()] + "/" + this._fin.getFullYear();
-    return FechaCadena2;
     }
     _OpDias() {
       let unDia = 24 * 60 * 60 * 1000;
@@ -109,7 +103,7 @@ export default class Funciones {
         row.cells[1].appendChild(iInicio);
         let iFin = document.createElement("input");
         iFin.type = "date";
-        iFin.value = Tarea._OpDato2()
+        iFin.value = Tarea._OpDato2();
         row.cells[2].innerHTML = "";
         row.cells[2].appendChild(iFin);
         let btnGuardado = document.createElement("input");
@@ -118,16 +112,14 @@ export default class Funciones {
         btnGuardado.className = "btn btn-success";
         row.cells[3].innerHTML = "";
         row.cells[3].appendChild(btnGuardado);
-        console.log(Tarea._OpCadena2())
-        this._Dias = Tarea._OpDias();
-        this._diaInicial = Tarea._OpCadena();
+        console.log(iFin.value)
+        console.log(iInicio.value)
         btnGuardado.addEventListener("click", () => {   
         let nuevoTarea = 
         {
             Nombre: iNombre.value,
             Inicio: iInicio.value,
             Fin: iFin.value,
-            Dias: this._Dias
         };
         console.log(nuevoTarea)
             return this._salvarEdicion(row, Tarea, nuevoTarea);
@@ -148,18 +140,21 @@ export default class Funciones {
         let nuevo = this._RTarea(Guardar, Tarea.Nombre);
         Guardar[nuevo] = nuevoTarea;
         console.log(Guardar)
+        let i = nuevoTarea.Inicio.split("-");
+        nuevoTarea.Inicio = new Date(i[0], i[1] - 1, i[2]);
+        let b = nuevoTarea.Fin.split("-");
+        nuevoTarea.Fin = new Date(b[0], b[1] - 1, b[2]);
         localStorage.setItem("Almacen", JSON.stringify(Guardar));
-        this._cancelarEdicion(row, new Funciones(Guardar));
-        return Guardar;
+        this._cancelarEdicion(row, new Funciones(nuevoTarea));
     }
     _cancelarEdicion(row, Tarea)
     {
         row.cells[0].innerHTML = "";
         row.cells[0].innerHTML = Tarea.Nombre;
         row.cells[1].innerHTML = "";
-        row.cells[1].innerHTML = this._diaInicial;
+        row.cells[1].innerHTML = Tarea._OpCadena();
         row.cells[2].innerHTML = "";
-        row.cells[2].innerHTML = this._Dias;
+        row.cells[2].innerHTML = Tarea._OpDias();
         this._Boton(row, Tarea);
     
     }
