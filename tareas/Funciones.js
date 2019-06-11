@@ -38,6 +38,10 @@ export default class Funciones {
     let Fecha2 = this._fin.getFullYear() + "-" + this._Op2Digitos(this._fin.getMonth()+1) + "-" + this._Op2Digitos(this._fin.getDate());
     return Fecha2;
     }
+    _OpCadena2() {
+        let FechaCadena2 = (this._fin.getDate()) + "/" + this._Meses[this._fin.getMonth()] + "/" + this._fin.getFullYear();
+        return FechaCadena2;
+    }
     _OpDias() {
       let unDia = 24 * 60 * 60 * 1000;
         let diferencia = this._fin - new Date();
@@ -84,10 +88,10 @@ export default class Funciones {
         btnEliminar.addEventListener("click", () => {
             this._Eliminar(row, Tarea);
         });
-        row.cells[3].innerHTML = "";
-        row.cells[3].appendChild(btnEditar);
         row.cells[4].innerHTML = "";
-        row.cells[4].appendChild(btnEliminar);
+        row.cells[4].appendChild(btnEditar);
+        row.cells[5].innerHTML = "";
+        row.cells[5].appendChild(btnEliminar);
     }
     _editarFila(row, Tarea)
     {
@@ -110,8 +114,8 @@ export default class Funciones {
         btnGuardado.type = "button";
         btnGuardado.value = "Grabar";
         btnGuardado.className = "btn btn-success";
-        row.cells[3].innerHTML = "";
-        row.cells[3].appendChild(btnGuardado);
+        row.cells[4].innerHTML = "";
+        row.cells[4].appendChild(btnGuardado);
         console.log(iFin.value)
         console.log(iInicio.value)
         btnGuardado.addEventListener("click", () => {   
@@ -128,8 +132,8 @@ export default class Funciones {
         btnCancelar.type = "button";
         btnCancelar.value = "Cancelar";
         btnCancelar.className = "btn btn-danger";
-        row.cells[4].innerHTML = "";
-        row.cells[4].appendChild(btnCancelar);
+        row.cells[5].innerHTML = "";
+        row.cells[5].appendChild(btnCancelar);
         btnCancelar.addEventListener("click", () => {
             this._cancelarEdicion(row, Tarea);
         })
@@ -149,13 +153,27 @@ export default class Funciones {
     }
     _cancelarEdicion(row, Tarea)
     {
+        var Dias = Tarea._OpDias()
+    if(Dias >= 0)
+    {
         row.cells[0].innerHTML = "";
         row.cells[0].innerHTML = Tarea.Nombre;
         row.cells[1].innerHTML = "";
         row.cells[1].innerHTML = Tarea._OpCadena();
         row.cells[2].innerHTML = "";
-        row.cells[2].innerHTML = Tarea._OpDias();
+        row.cells[2].innerHTML = Tarea._OpCadena2();
+        row.cells[3].innerHTML = "";
+        row.cells[3].innerHTML = Tarea._OpDias();
         this._Boton(row, Tarea);
+    }
+    else
+    {
+        Swal.fire({
+            type: "error" ,
+            title: "tarea pasada",
+            text: "asignaste una fecha que ya paso"
+            })
+    }
     
     }
     _Eliminar(row, Tarea)
@@ -164,8 +182,8 @@ export default class Funciones {
         btnConfirmar.type = "button";
         btnConfirmar.value = "Confirmar";
         btnConfirmar.className = "btn btn-danger";
-        row.cells[3].innerHTML = "";
-        row.cells[3].appendChild(btnConfirmar);
+        row.cells[4].innerHTML = "";
+        row.cells[4].appendChild(btnConfirmar);
         btnConfirmar.addEventListener("click", () => {  
             this._Tareas = JSON.parse(localStorage.getItem("Almacen"));
             this._Tareas.splice(Tarea, 1);
@@ -182,8 +200,8 @@ export default class Funciones {
         btnCancelar.type = "button";
         btnCancelar.value = "Cancelar";
         btnCancelar.className = "btn btn-success";
-        row.cells[4].innerHTML = "";
-        row.cells[4].appendChild(btnCancelar);
+        row.cells[5].innerHTML = "";
+        row.cells[5].appendChild(btnCancelar);
         btnCancelar.addEventListener("click", () => {
             this._Boton(row, Tarea);
         })

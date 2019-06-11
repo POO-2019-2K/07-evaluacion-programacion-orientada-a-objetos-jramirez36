@@ -28,11 +28,13 @@ export default class Tareas {
     let CNombre = row.insertCell(0);
     let CInicio = row.insertCell(1);
     let CFin = row.insertCell(2);
-    row.insertCell(3);
+    let CDias = row.insertCell(3);
     row.insertCell(4);
+    row.insertCell(5);
     CNombre.innerHTML = Tarea.Nombre;
     CInicio.innerHTML = Tarea._OpCadena();
-    CFin.innerHTML = Tarea._OpDias();
+    CFin.innerHTML = Tarea._OpCadena2();
+    CDias.innerHTML = Tarea._OpDias();
     this._CTareas++;
     this._NTareas.rows[0].cells[1].innerHTML = this._CTareas;
     Tarea._Boton(row, Tarea); 
@@ -59,12 +61,26 @@ export default class Tareas {
         Swal.fire({
         type: "error" ,
         title: "Error",
-        text: "El usuario ya existe"
+        text: "tarea ya existe"
         })
         return;
     }
-    this._ATabla(Tarea);
-    localStorage.setItem("Almacen", JSON.stringify(this._Tareas));
+    var Dias = Tarea._OpDias()
+    if(Dias >= 0)
+    {
+        this._ATabla(Tarea);
+        var Tipo = 2;
+        localStorage.setItem("Almacen", JSON.stringify(this._Tareas));
+        this._Ordenar(Tipo);
+    }
+    else
+    {
+        Swal.fire({
+            type: "error" ,
+            title: "Error",
+            text: "la tarea ya a pasado su fecha"
+            })
+    }
     }
     _Ordenar(Tipo)
         {
